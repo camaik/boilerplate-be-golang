@@ -81,7 +81,7 @@ func (h *userHandler) Login(c *gin.Context) {
 		return
 	}
 	formatter := user.FormatUser(loggedInUser, token)
-	response := helper.APIResponse("Successfuly loggedin", http.StatusOK, "success", formatter)
+	response := helper.APIResponse("Successfully logged in", http.StatusOK, "success", formatter)
 
 	c.JSON(http.StatusOK, response)
 }
@@ -98,7 +98,7 @@ func (h *userHandler) CheckEmailAvailability(c *gin.Context) {
 		return
 	}
 
-	IsEmailAvailable, err := h.userService.IsEmailAvailable(input)
+	isEmailAvailable, err := h.userService.IsEmailAvailable(input)
 	if err != nil {
 		errorMessage := gin.H{"errors": "Server error"}
 
@@ -108,12 +108,12 @@ func (h *userHandler) CheckEmailAvailability(c *gin.Context) {
 	}
 
 	data := gin.H{
-		"is_available": IsEmailAvailable,
+		"is_available": isEmailAvailable,
 	}
 
 	metaMessage := "Email has been registered"
 
-	if IsEmailAvailable {
+	if isEmailAvailable {
 		metaMessage = "Email is available"
 	}
 
@@ -134,7 +134,7 @@ func (h *userHandler) UploadAvatars(c *gin.Context) {
 	currentUser := c.MustGet("currentUser").(user.User)
 	userID := currentUser.ID
 
-	path := fmt.Sprintf("images/%d-%s", userID, file.Filename)
+	path := fmt.Sprintf("images/%s-%s", userID.String(), file.Filename)
 
 	err = c.SaveUploadedFile(file, path)
 	if err != nil {
@@ -155,7 +155,7 @@ func (h *userHandler) UploadAvatars(c *gin.Context) {
 	}
 
 	data := gin.H{"is_uploaded": true}
-	response := helper.APIResponse("Avatar successfuly uploaded", http.StatusOK, "success", data)
+	response := helper.APIResponse("Avatar successfully uploaded", http.StatusOK, "success", data)
 
 	c.JSON(http.StatusOK, response)
 }

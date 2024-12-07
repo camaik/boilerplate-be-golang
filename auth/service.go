@@ -4,10 +4,11 @@ import (
 	"errors"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/google/uuid"
 )
 
 type Service interface {
-	GenerateToken(userID int) (string, error)
+	GenerateToken(userID uuid.UUID) (string, error)
 	ValidateToken(encodedToken string) (*jwt.Token, error)
 }
 
@@ -20,9 +21,9 @@ func NewService() *jwtService {
 	return &jwtService{}
 }
 
-func (s *jwtService) GenerateToken(userID int) (string, error) {
+func (s *jwtService) GenerateToken(userID uuid.UUID) (string, error) {
 	claim := jwt.MapClaims{}
-	claim["user_id"] = userID
+	claim["user_id"] = userID.String()
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
 
